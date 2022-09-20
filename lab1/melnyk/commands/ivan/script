@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+#/ command: melnyk:ivan: "list all variables"
+#/ usage: rerun melnyk:ivan [options]
+#/ rerun-variables: RERUN, RERUN_VERSION, RERUN_MODULES, RERUN_MODULE_DIR
+#/ option-variables: 
+
+. "$RERUN_MODULE_DIR/lib/functions.sh" "ivan" || { 
+  echo >&2 "Failed loading function library." ; exit 1 ; 
+}
+
+set -o errexit -o nounset -o pipefail
+
+rerun_options_parse "$@"
+
+# Command implementation
+# ----------------------
+
+# - - -
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+DEFAULT='\033[0m'
+for var in $@
+do
+  if  [[ $var == --* ]]; # check for --<variable-name>
+    then
+      echo -e -n "${RED}$var${DEFAULT} "
+    else
+      echo -e "${GREEN}$var${DEFAULT}"
+  fi
+done
+# - - -
+
+# Done. Exit with last command exit status.
+exit $?
+
